@@ -55,6 +55,7 @@ namespace ArqSecurity.WebApi
             {
                 var _user = UserManager.FindById(UserId);
                 return (_user != null) ? _user : null;
+
             }
         }
     }
