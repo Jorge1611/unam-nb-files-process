@@ -17,13 +17,14 @@ namespace ArqSecurity.ViewModel
 
         public static implicit operator UsuarioViewModel(ApplicationUser _entity)
         {
-            return new UsuarioViewModel
-            {
-                UserName = _entity.UserName,
-                Email = _entity.Email,
-                //Puesto =  (_entity.Usuario.Puesto == null ? _entity.Usuario.Puesto:"ad"),
-                IDictionary = _entity.Id
-            };
+                return new UsuarioViewModel
+                {
+                    UserName = _entity.UserName,
+                    Email = _entity.Email,
+                    //Puesto =  (_entity.Usuario.Puesto == null ? _entity.Usuario.Puesto:"ad"),
+                    IDictionary = _entity.Id
+                };
+           
         }
     }
 }

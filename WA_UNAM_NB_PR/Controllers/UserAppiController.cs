@@ -10,13 +10,13 @@ namespace WA_UNAM_NB_PR.Controllers
 {
     public class UserAppiController : WebApiIdentity
     {
-        [HttpGet]
-        [Route("")]
-        public IHttpActionResult Test()
-        {
-            var _user = Usuario;
-            if (_user != null) return Ok(_user);
-            return NotFound();
-        }
+        //[HttpGet]
+        //[Route("")]
+        //public IHttpActionResult Test()
+        //{
+        //    var _user = Usuario;
+        //    if (_user != null) return Ok(_user);
+        //    return NotFound();
+        //}
     }
 }
