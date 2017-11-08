@@ -19,7 +19,10 @@ namespace WA_UNAM_NB_PR.Models.Services
         {
             var _user = Usuario;
             if (_user != null) return Ok(_user);
-            return NotFound();
+            else  return NotFound();
         }
     }
+
+
+
 }

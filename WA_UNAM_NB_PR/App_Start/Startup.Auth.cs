@@ -8,6 +8,9 @@ using Owin;
 using WA_UNAM_NB_PR.Models;
 using ArqSecurity.Model;
 using ArqSecurity;
+using System.Net;
+using System.Web.Http;
+using System.Web;
 
 namespace WA_UNAM_NB_PR
 {
@@ -32,11 +35,42 @@ namespace WA_UNAM_NB_PR
                 {
                     // Enables the application to validate the security stamp when the user logs in.
                     // This is a security feature which is used when you change a password or add an external login to your account.  
-                    OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
-                        validateInterval: TimeSpan.FromMinutes(30),
-                        regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+                    //OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
+                    //    validateInterval: TimeSpan.FromMinutes(30),
+                    //    regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+
+                    OnApplyRedirect = context =>
+                    {
+                        //if (!IsAjaxRequest(context.Request))
+                        //{
+
+                        //    context.Response.StatusCode = 401;
+                        //}
+                        if (!IsAjaxRequest(context.Request))
+                        {
+                            context.Response.Redirect(context.RedirectUri);
+                        }
+                    }
                 }
-            });            
+            });
+            //-----------------------------
+            //bool IsAjaxRequest(IOwinRequest request)
+            //{
+            //    IReadableStringCollection query = request.Query;
+            //    if ((query != null) && (query["X-Requested-With"] == "XMLHttpRequest"))
+            //    {
+            //        return true;
+            //    }
+            //    IHeaderDictionary headers = request.Headers;
+            //    return ((headers != null) && (headers["X-Requested-With"] == "XMLHttpRequest"));
+            //}
+            bool IsAjaxRequest(IOwinRequest request)
+            {
+                string apiPath = VirtualPathUtility.ToAbsolute("~/api/");
+                return request.Uri.LocalPath.StartsWith(apiPath);
+            }
+
+            //--------------------------
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
@@ -65,6 +99,7 @@ namespace WA_UNAM_NB_PR
             //    ClientId = "",
             //    ClientSecret = ""
             //});
+            
         }
     }
 }
