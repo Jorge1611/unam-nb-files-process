@@ -10,12 +10,18 @@
 
 <div class="row">
     <div class="col-md-6">
-        <h2>Hub</h2>
+        <h2>Hub Chat</h2>
         <div class="container">
             <input type="text" id="message" />
             <input type="button" id="sendmessage" value="Send" />
             <input type="hidden" id="displayname" />
             <ul id="discussion"></ul>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <h2>Hub Procesor</h2>
+        <div class="container">
+            <div id="HubProcesorEstatus"></div>
         </div>
     </div>
 </div>
@@ -47,6 +53,15 @@
             $('#displayname').val(prompt('Enter your name:', ''));
             // Set initial focus to message input box.
             $('#message').focus();
+
+            var hubProcesor = $.connection.procesorHub;
+            console.info('hubProcesor', hubProcesor);
+            hubProcesor.client.update = function (estatus) {
+                console.info('estatus', estatus);
+                $('#HubProcesorEstatus').html("estatus -> " + estatus);
+            };
+
+
             // Start the connection.
             $.connection.hub.start().done(function () {
                 $('#sendmessage').click(function () {
