@@ -7,6 +7,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Microsoft.AspNet.SignalR;
 
 namespace WA_UNAM_NB_PR.Controllers.Services
 {
@@ -54,22 +55,22 @@ namespace WA_UNAM_NB_PR.Controllers.Services
             }
         }
 
-        public int Estatus { get; set; }
+        public int Estatus { get; private set; }
 
         public ManagerProcesor()
         {
             Debug.WriteLine("Contructor Manager Procesor");
-            Estatus = 0;
+            changeEstatus(0);
         }
 
         public Task Go()
         {
             _task = Task.Factory.StartNew(() => {
-                Estatus = 1;
+                changeEstatus(1);
                 Debug.WriteLine("Estatus = 1");
                 Thread.Sleep(20000);
                 Debug.WriteLine("Estatus = 0");
-                Estatus = 0;
+                changeEstatus(0);
             });
             return _task;
         }
@@ -81,6 +82,18 @@ namespace WA_UNAM_NB_PR.Controllers.Services
                 // stop !!! 
                 // val y act del estatus
             }
+        }
+
+        private IHubContext _IHubContext;
+        public void SetHub(IHubContext _IHubContext)
+        {
+            this._IHubContext = _IHubContext;
+        }
+        private void changeEstatus(int estatus)
+        {
+            Estatus = estatus;
+            if (_IHubContext != null)
+                _IHubContext.Clients.All.update(estatus);
         }
     }
 

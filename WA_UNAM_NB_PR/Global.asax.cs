@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -6,6 +7,8 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using WA_UNAM_NB_PR.Controllers.Services;
+using WA_UNAM_NB_PR.Hubs;
 
 namespace WA_UNAM_NB_PR
 {
@@ -18,6 +21,7 @@ namespace WA_UNAM_NB_PR
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+            ManagerProcesor.Instance.SetHub(GlobalHost.ConnectionManager.GetHubContext<ProcesorHub>());
         }
     }
 }
