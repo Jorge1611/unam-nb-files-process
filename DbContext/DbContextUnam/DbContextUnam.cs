@@ -25,6 +25,7 @@ namespace WA_UNAM_NB_PR.DbContextUnam
         public virtual DbSet<TipoRolEstudio> TipoRolEstudio { get; set; }
         public virtual DbSet<Usuario> Usuario { get; set; }
         public virtual DbSet<UsuarioEstudio> UsuarioEstudio { get; set; }
+        public virtual DbSet<Libro> Libro { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

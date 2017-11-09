@@ -53,6 +53,7 @@
     <Compile Include="DbContextUnam\DbContextUnam.cs" />
     <Compile Include="DbContextUnam\Estudio.cs" />
     <Compile Include="DbContextUnam\GrupoTipoArchivo.cs" />
+    <Compile Include="DbContextUnam\Libro.cs" />
     <Compile Include="DbContextUnam\Md5File.cs" />
     <Compile Include="DbContextUnam\Procedimiento.cs" />
     <Compile Include="DbContextUnam\Resultado.cs" />
