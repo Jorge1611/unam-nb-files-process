@@ -49,10 +49,15 @@ namespace WA_UNAM_NB_PR
                         if (!IsAjaxRequest(context.Request))
                         {
                             context.Response.Redirect(context.RedirectUri);
+                            HttpContext.Current.Response.SuppressFormsAuthenticationRedirect = false;
                         }
                     }
+
                 }
             });
+
+
+
             //-----------------------------
             //bool IsAjaxRequest(IOwinRequest request)
             //{
@@ -62,13 +67,17 @@ namespace WA_UNAM_NB_PR
             //        return true;
             //    }
             //    IHeaderDictionary headers = request.Headers;
-            //    return ((headers != null) && (headers["X-Requested-With"] == "XMLHttpRequest"));
+            //    string apiPath = VirtualPathUtility.ToAbsolute("~/api/");
+            //    return request.Uri.LocalPath.StartsWith(apiPath);
+            //    //return ((headers != null) && (headers["X-Requested-With"] == "XMLHttpRequest"));
             //}
             bool IsAjaxRequest(IOwinRequest request)
             {
                 string apiPath = VirtualPathUtility.ToAbsolute("~/api/");
                 return request.Uri.LocalPath.StartsWith(apiPath);
             }
+
+
 
             //--------------------------
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
