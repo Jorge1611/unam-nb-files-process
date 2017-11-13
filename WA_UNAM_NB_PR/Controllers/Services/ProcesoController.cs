@@ -27,14 +27,28 @@ namespace WA_UNAM_NB_PR.Controllers.Services
         //}
 
         [HttpGet]
-        [ActionName("go")]
+        [Route("api/proceso/go")]
         public IHttpActionResult Go()
         {
 
             var _ManagerProcesor = ManagerProcesor.Instance;
-            if (_ManagerProcesor.Estatus == 0) // 0 es espera
+            if (_ManagerProcesor.Estatus == (int)ProcesoStatus.EnEspera)
             {
                 _ManagerProcesor.Go();
+            }
+            return Ok(_ManagerProcesor.Estatus);
+        }
+
+
+        [HttpGet]
+        [Route("api/proceso/stop")]
+        public IHttpActionResult Stop()
+        {
+
+            var _ManagerProcesor = ManagerProcesor.Instance;
+            if (_ManagerProcesor.Estatus == (int)ProcesoStatus.Trabajando) 
+            {
+                _ManagerProcesor.Stop();
             }
             return Ok(_ManagerProcesor.Estatus);
         }
@@ -45,6 +59,9 @@ namespace WA_UNAM_NB_PR.Controllers.Services
 
     public class ManagerProcesor
     {
+        private CancellationTokenSource _tokenSource;
+        private CancellationToken _myToken;
+        
         //private readonly Task _task;
         private readonly static ManagerProcesor _instance = new ManagerProcesor();
         private Task _task;
@@ -59,37 +76,60 @@ namespace WA_UNAM_NB_PR.Controllers.Services
 
         public ManagerProcesor()
         {
-            Debug.WriteLine("Contructor Manager Procesor");
-            changeEstatus(0);
+            Debug.WriteLine("Constructor Manager Procesor");
+            ChangeEstatus(0);
         }
 
         public Task Go()
         {
-            _task = Task.Factory.StartNew(() => {
-                changeEstatus(1);
-                Debug.WriteLine("Estatus = 1");
-                Thread.Sleep(20000);
-                Debug.WriteLine("Estatus = 0");
-                changeEstatus(0);
-            });
+            _tokenSource = new CancellationTokenSource();
+            _myToken = _tokenSource.Token;
+
+            _myToken = new CancellationToken();
+            _task = Task.Factory.StartNew(() =>  {
+                ChangeEstatus((int)ProcesoStatus.Trabajando);
+                Debug.WriteLine("Estatus = Trabajando");
+                Thread.Sleep(60000);
+                Debug.WriteLine("Estatus = En espera");
+                ChangeEstatus((int)ProcesoStatus.Trabajando);                                
+            }, _myToken );
+            
+            
             return _task;
         }
 
+        
+      
         public void Stop()
         {
+            
             if (_task != null)
             {
                 // stop !!! 
                 // val y act del estatus
+                //var ctk = Task.Factory.CancellationToken;
+                _tokenSource.Cancel();
+
+                if (_tokenSource.IsCancellationRequested)
+                {
+                    Debug.WriteLine("Proceso Cancelado");
+                    ChangeEstatus((int)ProcesoStatus.EnEspera);
+                    Debug.WriteLine("Estatus = En espera");
+                }
+                
+
             }
+            //return _task;
+
         }
+
 
         private IHubContext _IHubContext;
         public void SetHub(IHubContext _IHubContext)
         {
             this._IHubContext = _IHubContext;
         }
-        private void changeEstatus(int estatus)
+        private void ChangeEstatus(int estatus)
         {
             Estatus = estatus;
             if (_IHubContext != null)
@@ -97,6 +137,7 @@ namespace WA_UNAM_NB_PR.Controllers.Services
         }
     }
 
+    enum ProcesoStatus { EnEspera = 0, Trabajando = 1 }
+    }
 
-    
-}
+   

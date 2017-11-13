@@ -203,6 +203,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\Services\LibrosController.cs" />
     <Compile Include="Controllers\Services\ProcesoController.cs" />
+    <Compile Include="Controllers\Services\ProcessController.cs" />
     <Compile Include="Controllers\UserAppiController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Global.asax.cs">
