@@ -55,12 +55,13 @@ namespace WA_UNAM_NB_PR.Controllers.Services
             {
                 Status = 1;
                 Debug.WriteLine("Estatus = 1");
-                Thread.Sleep(5000);
+                Thread.Sleep(20000);
                 Status = 0;
                 Debug.WriteLine("Estatus = 0");
             });              
             return _task;
         }
+
 
     }
 }

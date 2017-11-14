@@ -35,7 +35,7 @@
 <script src="~/signalr/hubs"></script>
 <!--Add script to update the page and send messages.--> 
 
-<script type="text/javascript">
+@*<script type="text/javascript">
     $(function () {
         console.info('$.connection', $.connection);
             // Declare a proxy to reference the hub.
@@ -72,7 +72,27 @@
                 });
             });
         });
-</script>
+</script>*@
+
+    <script type="text/javascript">
+        $(function () {
+            console.info('$.connection', $.connection);
+            var singleton = $.connection.processHub;
+            
+            $.connection.hub.start().done(function () {
+                   // Call the Send method on the hub. 
+                console.info('estatus', singleton.server.getStatus());
+                $('#HubProcesorEstatus').html("estatus -> " + singleton.server.getStatus());
+            });
+
+            singleton.client.update = function () {
+                console.info('estatus', singleton.server.getStatus());
+                //$('#HubProcesorEstatus').html("estatus -> " + singleton.server.getStatus());
+                
+            };
+        });
+       
+    </script>
 }
 <!--
 <div class="row">
