@@ -18,13 +18,24 @@ namespace WA_UNAM_NB_PR.Hubs
         {
             var _ProcessManager = ProcessManager.Instance;
             int _status = _ProcessManager.Status;
-            if(this.Context !=null)
-                Clients.All.update(_status);
+            string _statusLetra=string.Empty;
+            if (_status == 1)
+            {
+                _statusLetra = "Trabajando";
+            }
+            else
+            {
+                _statusLetra = "En espera";
+            }
+            if (this.Context != null)
+                Clients.All.update(_statusLetra);
+            //if(this.Context !=null)
+            //    Clients.All.update(_status);
             //IHubContext context = GlobalHost.ConnectionManager.GetHubContext<ProcessHub>();
             ////if (context != null)
             //    context.Clients.All(_status);
             //Clients.All.Addvalor(_status);
-            
+
 
         }
 

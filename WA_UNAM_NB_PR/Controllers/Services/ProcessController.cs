@@ -12,15 +12,27 @@ namespace WA_UNAM_NB_PR.Controllers.Services
 {
     public class ProcessController : ApiController
     {
-        
         [HttpGet]
         [Route("api/process/go")]
         public IHttpActionResult Go()
         {
             var _ProcessManager = ProcessManager.Instance;
-            if (_ProcessManager.Status == 0)
+            if (_ProcessManager.Status == (int)ProcesoStatus.EnEspera)
             {
                 _ProcessManager.Go();
+            }
+            return Ok(_ProcessManager.Status);
+        }
+
+        [HttpGet]
+        [Route("api/process/stop")]
+        public IHttpActionResult Stop()
+        {
+
+            var _ProcessManager = ProcessManager.Instance;
+            if (_ProcessManager.Status == (int)ProcesoStatus.Trabajando)
+            {
+                _ProcessManager.Stop();
             }
             return Ok(_ProcessManager.Status);
         }
@@ -30,6 +42,8 @@ namespace WA_UNAM_NB_PR.Controllers.Services
     public class ProcessManager
     {
         private static readonly ProcessManager _instance = new ProcessManager();
+        private CancellationTokenSource _tokenSource;
+        private CancellationToken _myToken;
         public static ProcessManager Instance
         {
             get
@@ -42,7 +56,7 @@ namespace WA_UNAM_NB_PR.Controllers.Services
         private ProcessManager()
         {
             Debug.WriteLine("Inicio unico del constructor");
-            Status = 0;
+            Status = (int)ProcesoStatus.EnEspera;
         }
 
         /// <summary>
@@ -51,17 +65,33 @@ namespace WA_UNAM_NB_PR.Controllers.Services
         /// <returns> tarea </returns>
         public Task Go()
         {
+            _tokenSource = new CancellationTokenSource();
+            _myToken = _tokenSource.Token;
             _task = Task.Factory.StartNew(() =>
             {
-                Status = 1;
-                Debug.WriteLine("Estatus = 1");
+                Status = (int)ProcesoStatus.Trabajando;
+                Debug.WriteLine("Estatus = Trabajando");
                 Thread.Sleep(20000);
-                Status = 0;
-                Debug.WriteLine("Estatus = 0");
+                Status = (int)ProcesoStatus.EnEspera;
+                Debug.WriteLine("Estatus = En espera");
             });              
             return _task;
         }
 
+        public void Stop()
+        {
+            if (_task != null)
+            {
+                _tokenSource.Cancel();
+
+                if (_tokenSource.IsCancellationRequested)
+                {
+                    Debug.WriteLine("Proceso Cancelado");
+                    Status=((int)ProcesoStatus.EnEspera);
+                    Debug.WriteLine("Estatus = En espera");
+                }
+            }            
+        }
 
     }
 }
