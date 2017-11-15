@@ -79,17 +79,21 @@
             console.info('$.connection', $.connection);
             var singleton = $.connection.processHub;
             
-            $.connection.hub.start().done(function () {
-                   // Call the Send method on the hub. 
+            $.connection.hub.start().done(function (status) {
+                // Call the Send method on the hub. 
+                singleton.server.getStatus();
                 console.info('estatus', singleton.server.getStatus());
-                $('#HubProcesorEstatus').html("estatus -> " + singleton.server.getStatus());
+                //singleton.server.getStatus();
+                $('#HubProcesorEstatus').html("estatus actual del proceso -> " + status);//singleton.server.getStatus());
             });
 
-            singleton.client.update = function () {
-                console.info('estatus', singleton.server.getStatus());
-                //$('#HubProcesorEstatus').html("estatus -> " + singleton.server.getStatus());
+            singleton.client.update = function (status) {
+            //    console.info('estatus', singleton.server.getStatus());
+                singleton.server.getStatus();
+                $('#HubProcesorEstatus').html("estatus actual del proceso-> " + status);//singleton.server.getStatus());
                 
-            };
+
+                };
         });
        
     </script>

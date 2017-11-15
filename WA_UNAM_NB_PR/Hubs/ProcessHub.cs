@@ -14,15 +14,17 @@ namespace WA_UNAM_NB_PR.Hubs
         //    Clients.All.hello();
         //}
 
-        public int GetStatus()
+        public void GetStatus()
         {
             var _ProcessManager = ProcessManager.Instance;
             int _status = _ProcessManager.Status;
-            Clients.All.update(_status);
+            if(this.Context !=null)
+                Clients.All.update(_status);
             //IHubContext context = GlobalHost.ConnectionManager.GetHubContext<ProcessHub>();
             ////if (context != null)
-            ////    context.Clients.All(_status);
-            return _status;
+            //    context.Clients.All(_status);
+            //Clients.All.Addvalor(_status);
+            
 
         }
 
