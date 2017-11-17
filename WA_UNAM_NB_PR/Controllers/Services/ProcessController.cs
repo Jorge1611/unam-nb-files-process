@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNet.SignalR;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -7,6 +8,7 @@ using System.Net.Http;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Http;
+using WA_UNAM_NB_PR.Hubs;
 
 namespace WA_UNAM_NB_PR.Controllers.Services
 {
@@ -21,7 +23,8 @@ namespace WA_UNAM_NB_PR.Controllers.Services
             {
                 _ProcessManager.Go();
             }
-            return Ok(_ProcessManager.Status);
+            var _statusLetra = (ProcessManager.Instance.Status == 0) ? "En espera" : "Trabajando";
+            return Ok(_statusLetra);
         }
 
         [HttpGet]
@@ -34,7 +37,8 @@ namespace WA_UNAM_NB_PR.Controllers.Services
             {
                 _ProcessManager.Stop();
             }
-            return Ok(_ProcessManager.Status);
+            var _statusLetra = (ProcessManager.Instance.Status == 0) ? "En espera" : "Trabajando";
+            return Ok(_statusLetra);
         }
 
     }
@@ -69,10 +73,10 @@ namespace WA_UNAM_NB_PR.Controllers.Services
             _myToken = _tokenSource.Token;
             _task = Task.Factory.StartNew(() =>
             {
-                Status = (int)ProcesoStatus.Trabajando;
+                UpdateStatus((int)ProcesoStatus.Trabajando);
                 Debug.WriteLine("Estatus = Trabajando");
                 Thread.Sleep(20000);
-                Status = (int)ProcesoStatus.EnEspera;
+                UpdateStatus((int)ProcesoStatus.EnEspera);
                 Debug.WriteLine("Estatus = En espera");
             });              
             return _task;
@@ -87,11 +91,17 @@ namespace WA_UNAM_NB_PR.Controllers.Services
                 if (_tokenSource.IsCancellationRequested)
                 {
                     Debug.WriteLine("Proceso Cancelado");
-                    Status=((int)ProcesoStatus.EnEspera);
+                    UpdateStatus((int)ProcesoStatus.EnEspera);
                     Debug.WriteLine("Estatus = En espera");
                 }
             }            
         }
-
+        
+        public void UpdateStatus(int value)
+        {
+            Status = value;
+            var connection = GlobalHost.ConnectionManager.GetHubContext<ProcessHub>();
+            connection.Clients.All.getupdate();
+        }
     }
 }
