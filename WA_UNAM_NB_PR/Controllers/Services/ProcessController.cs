@@ -43,7 +43,7 @@ namespace WA_UNAM_NB_PR.Controllers.Services
 
     }
 
-    public class ProcessManager
+    public class ProcessManager : IProcessManager
     {
         private static readonly ProcessManager _instance = new ProcessManager();
         private CancellationTokenSource _tokenSource;
@@ -56,7 +56,7 @@ namespace WA_UNAM_NB_PR.Controllers.Services
             }
         }
         private Task _task;
-        public int Status;
+        public int Status { get; private set; }
         private ProcessManager()
         {
             Debug.WriteLine("Inicio unico del constructor");
@@ -64,7 +64,7 @@ namespace WA_UNAM_NB_PR.Controllers.Services
         }
 
         /// <summary>
-        /// Lanza la tarea. Cambia el estatus a trabajando esperando 5 segundos y termina la tarea
+        /// Lanza la tarea. Cambia el estatus a trabajando esperando 20 segundos y termina la tarea
         /// </summary>
         /// <returns> tarea </returns>
         public Task Go()

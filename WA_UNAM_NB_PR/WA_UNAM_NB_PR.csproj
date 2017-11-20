@@ -201,6 +201,7 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\Services\IProcessManager.cs" />
     <Compile Include="Controllers\Services\LibrosController.cs" />
     <Compile Include="Controllers\Services\ProcesoController.cs" />
     <Compile Include="Controllers\Services\ProcessController.cs" />

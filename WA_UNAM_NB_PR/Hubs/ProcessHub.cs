@@ -10,16 +10,17 @@ namespace WA_UNAM_NB_PR.Hubs
 {
     public class ProcessHub : Hub
     {
-        public override Task OnDisconnected(bool stopCalled)
+        private IProcessManager _processManager;
+
+        public ProcessHub(IProcessManager processManager)
         {
-            string cadena = "Te desconectaste del servidor";
-            Clients.All.update(cadena);
-            return base.OnDisconnected(stopCalled);
+            _processManager = processManager;
         }
+
         public void GetStatus()
         {
-            var _ProcessManager = ProcessManager.Instance;
-            int _status = _ProcessManager.Status;
+            //var _ProcessManager = ProcessManager.Instance;
+            int _status = _processManager.Status;
             string _statusLetra=string.Empty;
             _statusLetra=(_status==0)?"En espera":"Trabajando";
             if (this.Context != null)
