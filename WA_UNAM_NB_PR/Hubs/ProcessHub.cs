@@ -17,14 +17,22 @@ namespace WA_UNAM_NB_PR.Hubs
             _processManager = processManager;
         }
 
-        public void GetStatus()
+        public async Task StartProcess()
         {
-            //var _ProcessManager = ProcessManager.Instance;
-            int _status = _processManager.Status;
-            string _statusLetra=string.Empty;
-            _statusLetra=(_status==0)?"En espera":"Trabajando";
+            await _processManager.Go();
+        }
+
+        public void StopProcess()
+        {
+            _processManager.Stop();
+        }
+
+        public void GetStatus()
+        {  
+            string statusLetra=string.Empty;
+            statusLetra=(_processManager.Status==0)?"En espera":"Trabajando";
             if (this.Context != null)
-                Clients.All.update(_statusLetra);
+                Clients.All.update(statusLetra);
         }
 
 

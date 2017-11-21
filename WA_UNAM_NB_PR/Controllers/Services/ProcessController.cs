@@ -101,7 +101,8 @@ namespace WA_UNAM_NB_PR.Controllers.Services
         {
             Status = value;
             var connection = GlobalHost.ConnectionManager.GetHubContext<ProcessHub>();
-            connection.Clients.All.getupdate();
+            if(connection != null)
+                connection.Clients.All.getupdate();
         }
     }
 }
